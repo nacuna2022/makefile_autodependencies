@@ -2,5 +2,4 @@
 1. gcc can be used to generate dependencies
         using -M and -MF <file.d>
 
-
-        
+2. -M includes all system header files, so we change it to -MM

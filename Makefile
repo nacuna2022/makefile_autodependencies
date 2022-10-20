@@ -10,7 +10,7 @@ final: $(OBJS)
 	$(CC) -I. -c -o $@ $<
 
 %.d:%.c
-	$(CC) -I. -M -MF $@ $<
+	$(CC) -I. -MM -MF $@ $<
 
 include $(OBJS:.o=.d)
 
