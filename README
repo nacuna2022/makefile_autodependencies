@@ -3,3 +3,42 @@
         using -M and -MF <file.d>
 
 2. -M includes all system header files, so we change it to -MM
+
+3. what happens when we rename or delete a header file?
+        mv banner.h bannerv2.h
+        edit main.c to include bannerv2.h instead of banner.h
+        then invoke make
+
+nacuna@PHN0341:~/git/makefile_autodependencies$ make
+gcc -I. -MM -MF main.d main.c
+gcc -I. -c -o main.o main.c
+make: *** No rule to make target 'banner.h', needed by 'banner.o'.  Stop.
+
+4. solution to above problem? add -MP flag to compiler 
+
+This option instructs CPP to add a phony target for each dependency other
+than the main file, causing each to depend on nothing. These dummy rules
+work around errors make gives if you remove header files without updating the
+‘Makefile’ to match.
+        This is typical output:
+        test.o: test.c test.h
+
+        test.h:
+
+5. when there is no .d files yet, make will complain that there is no .d file.
+
+nacuna@PHN0341:~/git/makefile_autodependencies$ make
+Makefile:15: main.d: No such file or directory      <-
+Makefile:15: banner.d: No such file or directory    <-
+gcc -I. -MP -MM -MF banner.d banner.c
+gcc -I. -MP -MM -MF main.d main.c
+gcc -o final main.o banner.o
+
+        Solution? 
+        1. create the .d file while making the .o
+        2. use -MMD now since we are also using -o in the same command 
+
+        new rule is:
+        $(CC) -I. -MP -MMD -c -o $@ $<
+
+

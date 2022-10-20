@@ -6,11 +6,11 @@ all: final
 final: $(OBJS)
 	$(CC) -o $@ $^
 
-%.o:%.c
-	$(CC) -I. -c -o $@ $<
+%.o:%.c %.d
+	$(CC) -I. -MP -MMD -c -o $@ $<
 
-%.d:%.c
-	$(CC) -I. -MM -MF $@ $<
+#implicit rule for .d files
+%.d: ;
 
 include $(OBJS:.o=.d)
 
