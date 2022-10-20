@@ -1,23 +1,31 @@
+DEP_DIR=.dep
 CC=gcc
 OBJS=main.o banner.o
 
 all: final
 
 final: $(OBJS)
-	$(CC) -o $@ $^
+	@echo "LD	$@"
+	@$(CC) -o $@ $^
 
-%.o:%.c %.d
-	$(CC) -I. -MP -MMD -c -o $@ $<
+%.o:%.c $(DEP_DIR)/%.d | $(DEP_DIR)
+	@echo "CC 	$@"
+	@$(CC) -I. -MP -MMD -MF $(DEP_DIR)/$*.d -c -o $@ $<
 
-#implicit rule for .d files
-%.d: ;
+$(DEP_DIR):
+	mkdir $(DEP_DIR)
 
-include $(OBJS:.o=.d)
+DEPFILES=$(patsubst %.o, $(DEP_DIR)/%.d, $(OBJS))
+$(DEPFILES): ;
+
+#initially, the dep files dont exist so make will complain that 
+# there is no such file or directory... just used -include instead.
+-include $(DEPFILES)
 
 .PHONY: clean
 clean:
 	rm final
 	rm *.o
-	rm *.d
+	rm -rf .deps
 
 

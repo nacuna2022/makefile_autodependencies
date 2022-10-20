@@ -41,4 +41,12 @@ gcc -o final main.o banner.o
         new rule is:
         $(CC) -I. -MP -MMD -c -o $@ $<
 
+6. .d files clutter our working area. put them in a separate directory.
 
+        read about order-only prerequisites
+
+        Solution?
+        1. add a directory where .d files will do
+        2. modify GCC compilation option so that .d will be saved to dep directory
+                add -MF $(DEP_DIR)/$*.d option
+        
