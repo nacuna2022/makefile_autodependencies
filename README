@@ -1,0 +1,6 @@
+
+1. gcc can be used to generate dependencies
+        using -M and -MF <file.d>
+
+
+        
